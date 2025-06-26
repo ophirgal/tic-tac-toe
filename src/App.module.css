@@ -1,0 +1,21 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.table, .table td {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.table td {
+  width: 100px;
+  height: 100px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 90px;
+  cursor: pointer;
+}
