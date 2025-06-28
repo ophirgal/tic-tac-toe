@@ -1,36 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import './board.css'
+import { on } from 'events'
 
-export default function Board() {
-    const [board, setBoard] = useState<string[][]>([
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']]
-    );
-    const [turn, setTurn] = useState<string>('X');
-    const [isFinished, setIsFinished] = useState<boolean>(false);
-    const [winner, setWinner] = useState<string>('');
+interface BoardProps {
+    onCellClick: (e: React.MouseEvent<HTMLTableCellElement>) => void
+    onGameOver: (winner: string) => void
+    board: string[][]
+    disabled?: boolean
+}
 
-    const handleCellClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
-        const { row, col } = e.currentTarget.dataset;
-        if (row && col) {
-            const [rowNum, colNum] = [Number(row), Number(col)];
-            const newBoard = [...board];
-            if (newBoard[rowNum][colNum]) return; // avoid replacing existing value
-
-            newBoard[rowNum][colNum] = turn === 'X' ? 'X' : 'O';
-            setTurn(turn === 'X' ? 'O' : 'X');
-            setBoard(newBoard);
-        }
-    }
-
-    const handlePlayAgainClick = () => {
-        setBoard([['', '', ''], ['', '', ''], ['', '', '']])
-        setWinner('')
-        setTurn('X')
-        setIsFinished(false);
-    }
-
+export default function Board({ onCellClick, onGameOver, board, disabled }: BoardProps) {
     const determineWinner = () => {
         /*
             for every configuration (row, column, or diagonal) in the board, check if the three values are the same, if so return the value, otherwise return an empty string.
@@ -68,21 +47,15 @@ export default function Board() {
     // useEffect for updating game state based on board updates
     useEffect(() => {
         const winnerValue = determineWinner()
-        if (winnerValue) {
-            setWinner(winnerValue);
-            setIsFinished(true);
-            return
-        }
-
-        if (isBoardFull(board)) {
-            setIsFinished(true);
+        if (winnerValue || isBoardFull(board)) {
+            onGameOver(winnerValue);
         }
     }, [board])
 
 
     return (
         <section className="board">
-            <table className={isFinished ? 'disabled' : ''}>
+            <table className={disabled ? 'disabled' : ''}>
                 <tbody>
                     {
                         board.map((row, rowIndex) => {
@@ -93,7 +66,7 @@ export default function Board() {
                                             return (
                                                 <td
                                                     key={`${rowIndex}-${colIndex}`}
-                                                    onMouseDown={handleCellClick}
+                                                    onMouseDown={onCellClick}
                                                     data-row={rowIndex}
                                                     data-col={colIndex}
                                                 >
@@ -107,9 +80,6 @@ export default function Board() {
                     }
                 </tbody>
             </table>
-            {/* TODO -- move the two elements below to the parent component (requires refactoring state to lift state up to the parent) */}
-            <h1>{isFinished && `Game is finished: ${winner ? winner + ' wins' : "It's a Draw"}!`}</h1>
-            <button onClick={handlePlayAgainClick} style={{ visibility: isFinished ? 'visible' : 'hidden' }}>Play Again</button>
         </section>
     )
 }
