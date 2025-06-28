@@ -93,7 +93,7 @@ export default function Board() {
                                             return (
                                                 <td
                                                     key={`${rowIndex}-${colIndex}`}
-                                                    onClick={handleCellClick}
+                                                    onMouseDown={handleCellClick}
                                                     data-row={rowIndex}
                                                     data-col={colIndex}
                                                 >
