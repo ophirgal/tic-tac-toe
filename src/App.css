@@ -1,0 +1,15 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.app header {
+  flex-basis: 20%;
+}
+
+.app main {
+  flex-basis: 80%;
+}
