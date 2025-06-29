@@ -70,6 +70,7 @@
 
 .app .results>*:nth-child(2) {
   flex: 5;
+  overflow: scroll;
 }
 
 .app .results>*:nth-child(3) {
